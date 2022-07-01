@@ -57,21 +57,22 @@ class AdminController extends Controller
 
     public function managecustomer()
     {
-        $customers = Customer::with('rentals')->get();
-        // $branches = [];
+        $customers = Customer::with('rentals', 'branch', 'address')->get();
+        // return $customers;
+        // $branch_items = [];
         // foreach($customers as $item){
-        //     foreach($item->rentals as $rent){
-        //         $branch = Branch::find($rent->branch_id);
-        //         array_push($branches, $branch);
+        //     foreach($item->branch as $branch_item){
+        //         $branch = Branch::find($branch_item->customer_id);
+        //         array_push($branch_item, $branch);
         //     }
         // }
 
-        // return $branches;
+        // return $branch_items;
 
         // dd($branches);
-
-        $branch = Branch::with('rental')->get();
-        // return $branch;   
+        // $customeraddress = Customer::with('customeraddresses')->get();
+        // return $customeraddress;
+          
         return view('admin.managecustomer', compact('customers'));
     }
 
@@ -109,6 +110,7 @@ class AdminController extends Controller
         // Insert Customer record into Address table
         $address = new Address;
         $address->str_1 = $request->str_1;
+        $address->customer_id = $customer_id;
         $address->str_2 = $request->str_2;
         $address->city = $request->city;
         $address->state = $request->state;
@@ -126,9 +128,11 @@ class AdminController extends Controller
         // Insert Record into Branch Table
         $branch = new Branch;
         $branch->name = $request->branch;
-
+        $branch->customer_id = $customer_id;
         $branch->save();
         $branch_id = $branch->id;
+       
+
         // Insert Record into Branch Address Table
         $branchaddress = new BranchAddress;
         $branchaddress->address_id = $address_id;
@@ -137,6 +141,65 @@ class AdminController extends Controller
         $branchaddress->save();
 
         return back()->with('message', 'Customer Info added successfully!');
+    }
+
+    public function update_customer(Request $request, $id)
+    {
+        $this->validate($request, [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'gender' => 'required',
+            'branch' => 'required',
+            'str_1' => 'required',
+            'str_2' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+        ]);
+
+        // return $request;
+
+        $updateCustomer = Customer::find($id);
+        // return $updateCustomer;
+        $updateCustomer->fname = $request->firstname;
+        $updateCustomer->lname = $request->lastname;
+        $updateCustomer->email = $request->email;
+        $updateCustomer->phone = $request->phone;
+        $updateCustomer->gender = $request->gender;
+
+        $updateCustomer->save();
+
+        $branchId = $updateCustomer->id;
+
+        // return $branchId;
+
+        $updateBranch = Branch::find($updateCustomer->id);
+        // return $updateBranch;
+        // if(empty($request->branch)){
+        //     $updateBranch->name = $request->branch;
+        // }else{
+        //     $updateBranch->name = $updateBranch->name;
+        // }
+        $updateBranch->name = $request->branch;
+        
+        // return $updateBranch;
+        $updateBranch->save();
+
+        $addId = $updateCustomer->id;
+        // return $addId;
+        $updateaddress = Address::find($addId);
+        // return $updateaddress;
+        $updateaddress->str_1 = $request->str_1;
+        $updateaddress->str_2 = $request->str_2;
+        $updateaddress->city = $request->city;
+        $updateaddress->state = $request->state;
+        $updateaddress->zip = $request->zip;
+
+        $updateaddress->update();
+
+        return back()->with('message', 'Customer Record Update Successfully!');
     }
 
 }

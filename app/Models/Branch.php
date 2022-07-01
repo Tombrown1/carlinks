@@ -13,4 +13,9 @@ class Branch extends Model
     {
         return $this->hasMany(Rental::class);
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

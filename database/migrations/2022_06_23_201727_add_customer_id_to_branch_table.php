@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVehiclesTable extends Migration
+class AddCustomerIdToBranchTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateVehiclesTable extends Migration
      */
     public function up()
     {
-        Schema::create('vehicles', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('branches', function (Blueprint $table) {
+            $table->after('id', function($table){
+                $table->integer('customer_id');
+            });
         });
     }
 
@@ -26,6 +27,8 @@ class CreateVehiclesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vehicles');
+        Schema::table('branches', function (Blueprint $table) {
+            //
+        });
     }
 }

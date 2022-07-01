@@ -13,4 +13,21 @@ class Customer extends Model
 
         return $this->hasMany(Rental::class);
     }
+
+    public function CustomerAddresses()
+    {
+        return $this->hasMany(CustomerAddress::class);
+    }
+
+    public function branch()
+    {
+        return $this->hasOne(Branch::class);
+    }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
+
+    
 }

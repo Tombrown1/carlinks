@@ -43,6 +43,8 @@ Route::get('/view-single-car/{id}', [ManageCarController::class, 'single_vehicle
 Route::get('/manage-customer', [AdminController::class, 'managecustomer'])->middleware(['auth'])->name('manage.customer');
 //Add Customer Route
 Route::post('/add-customer', [AdminController::class, 'addcustomer'])->middleware(['auth'])->name('add.customer');
+//Update Customer Route
+Route::put('/update-customer/{id}', [AdminController::class, 'update_customer'])->middleware(['auth'])->name('update.customer');
 
 //Rent Vehicle Route
 Route::post('/rent-vehicle', [RentalController::class, 'rent'])->middleware(['auth'])->name('rent.vehicle');

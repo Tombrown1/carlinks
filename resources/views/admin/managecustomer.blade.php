@@ -28,17 +28,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach($customers as $customer)
+                        @foreach($customers as $customer)                           
+
                             <tr>
                                 <td>{{$loop->index +1}}</td>
                                 <td>{{$customer->fname . ' '. $customer->lname}}</td>
                                 <td>{{$customer->email}}</td>
                                 <td>{{$customer->phone}}</td>
                                 <td>{{$customer->gender}}</td>
-                                <td><a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editcustomer">Edit</a></td>
+                                <td><a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editcustomer{{$customer->id}}">Edit</a></td>
                                 <td><a href="#" class="btn btn-success">View</a></td>
                                 <!-- Customer Edit Modal -->
-                                <div class="modal fade modal" id="editcustomer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade modal" id="editcustomer{{$customer->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -46,7 +47,8 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                            <form action="{{route('add.customer')}}" method="post">
+                                            <form action="{{route('update.customer', ['id' => $customer->id])}}" method="post">
+                                                @method('PUT')
                                                 @csrf
                                                 <div class="form-floating mb-3">
                                                     <input class="form-control" id="inputFName" type="text" name="firstname" value="{{$customer->fname}}" />
@@ -75,27 +77,27 @@
                                                     <label for="inputGender">Select Gender</label>
                                                 </div>
                                                 <div class="form-floating mb-3">
-                                                    <input class="form-control" id="inputBranch" type="text" name="branch" value="{{$customer->branch_id}}" />
+                                                    <input class="form-control" id="inputBranch" type="text" name="branch" value="{{$customer->branch->name}}"/>
                                                     <label for="inputBranch">Branch</label>
                                                 </div>
                                                 <div class="form-floating mb-3">
-                                                    <input class="form-control" id="inputStr1" type="text" name="str_1" value="{{App\Models\CustomerAddress::find($customer->id)}}" />
+                                                    <input class="form-control" id="inputStr1" type="text" name="str_1" value="{{$customer->address->str_1}}" />
                                                     <label for="inputStr1">Street 1</label>
                                                 </div>
                                                 <div class="form-floating mb-3">
-                                                    <input class="form-control" id="inputStr2" type="text" name="str_2" placeholder="Street 2" />
+                                                    <input class="form-control" id="inputStr2" type="text" name="str_2"  value="{{$customer->address->str_2}}" />
                                                     <label for="inputStr2">Street 2</label>
                                                 </div>
                                                 <div class="form-floating mb-3">
-                                                    <input class="form-control" id="inputCity" type="text" name="city" placeholder="City" />
+                                                    <input class="form-control" id="inputCity" type="text" name="city"  value="{{$customer->address->city}}" />
                                                     <label for="inputCity">City</label>
                                                 </div>
                                                 <div class="form-floating mb-3">
-                                                    <input class="form-control" id="inputState" type="text" name="state" placeholder="State" />
+                                                    <input class="form-control" id="inputState" type="text" name="state"  value="{{$customer->address->state}}" />
                                                     <label for="inputState">State</label>
                                                 </div>
                                                 <div class="form-floating mb-3">
-                                                    <input class="form-control" id="inputZip" type="text" name="zip" placeholder="Zip" />
+                                                    <input class="form-control" id="inputZip" type="text" name="zip"  value="{{$customer->address->zip}}" />
                                                     <label for="inputZip">Zip Code</label>
                                                 </div>
                                             </div>
